@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=3 uid="uid://c8lo8vqxik524"]
+
+[ext_resource type="PackedScene" uid="uid://bw6chl4k8ore2" path="res://source/kerry.fbx" id="1_cl42s"]
+[ext_resource type="Texture2D" uid="uid://c7dsal6nhepum" path="res://textures/kerry.jpeg" id="2_ed7rw"]
+[ext_resource type="Texture2D" uid="uid://bv26siwsba1s4" path="res://horn-koppe_spring_4k.exr" id="2_u6utt"]
+[ext_resource type="PackedScene" uid="uid://bl8msudax3t2o" path="res://source/Cardboard Box.fbx" id="4_bk6bo"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_7bicn"]
+panorama = ExtResource("2_u6utt")
+
+[sub_resource type="Sky" id="Sky_8gjs1"]
+sky_material = SubResource("PanoramaSkyMaterial_7bicn")
+
+[sub_resource type="Environment" id="Environment_jjlha"]
+background_mode = 2
+sky = SubResource("Sky_8gjs1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u6utt"]
+albedo_texture = ExtResource("2_ed7rw")
+
+[node name="kerry" instance=ExtResource("1_cl42s")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="0"]
+environment = SubResource("Environment_jjlha")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="1"]
+transform = Transform3D(0.91854984, 0.2460833, -0.3093691, -1.8608436e-08, 0.78260815, 0.62251467, 0.39530522, -0.5718107, 0.7188646, -3.3633716, 6.979177, 2.1505399)
+shadow_enabled = true
+
+[node name="Model" parent="." index="2"]
+transform = Transform3D(100.000015, 0, 0, 0, 77.90098, 62.701187, 0, -62.701187, 77.90098, 0, 4.977593, 3.7687337)
+material_override = SubResource("StandardMaterial3D_u6utt")
+
+[node name="Cardboard Box" parent="." index="3" instance=ExtResource("4_bk6bo")]
+transform = Transform3D(0.122872815, 1.8263428e-08, 0.086036466, -1.3113417e-08, 0.15, -1.3113416e-08, -0.08603647, 3.220335e-09, 0.1228728, -1.416, 0.856, -0.858)
