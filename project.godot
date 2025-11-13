@@ -11,5 +11,6 @@ config_version=5
 [application]
 
 config/name="Projeto computação gráfica"
+run/main_scene="uid://ca0j16icoeefb"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"

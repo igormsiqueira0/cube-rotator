@@ -1,3 +1,27 @@
-[gd_scene format=3 uid="uid://ca0j16icoeefb"]
+[gd_scene load_steps=6 format=3 uid="uid://ca0j16icoeefb"]
+
+[ext_resource type="Texture2D" uid="uid://bv26siwsba1s4" path="res://horn-koppe_spring_4k.exr" id="1_noarx"]
+[ext_resource type="PackedScene" uid="uid://bl8msudax3t2o" path="res://source/Cardboard Box.fbx" id="2_a0tk4"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_r3fl7"]
+panorama = ExtResource("1_noarx")
+
+[sub_resource type="Sky" id="Sky_jka67"]
+sky_material = SubResource("PanoramaSkyMaterial_r3fl7")
+
+[sub_resource type="Environment" id="Environment_i5arm"]
+background_mode = 2
+sky = SubResource("Sky_jka67")
+tonemap_mode = 2
+glow_enabled = true
 
 [node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i5arm")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+
+[node name="Cardboard Box" parent="." instance=ExtResource("2_a0tk4")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.5, 0)
