@@ -1,7 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ca0j16icoeefb"]
+[gd_scene load_steps=12 format=3 uid="uid://ca0j16icoeefb"]
 
 [ext_resource type="Texture2D" uid="uid://bv26siwsba1s4" path="res://horn-koppe_spring_4k.exr" id="1_noarx"]
 [ext_resource type="PackedScene" uid="uid://bl8msudax3t2o" path="res://source/Cardboard Box.fbx" id="2_a0tk4"]
+[ext_resource type="Texture2D" uid="uid://b6q8a5tp4l535" path="res://source/heart_77931.png" id="3_a0tk4"]
+[ext_resource type="Script" uid="uid://7patgw0kabyp" path="res://source/cardboard_box.gd" id="3_jka67"]
+[ext_resource type="Script" uid="uid://q2tcnjk7tk05" path="res://canvas_layer.gd" id="3_r3fl7"]
+[ext_resource type="Texture2D" uid="uid://cssy0sdlc6fss" path="res://source/658211.png" id="5_i5arm"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_r3fl7"]
 panorama = ExtResource("1_noarx")
@@ -15,6 +19,16 @@ sky = SubResource("Sky_jka67")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="LabelSettings" id="LabelSettings_wc5p8"]
+font_size = 25
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_jsk3o"]
+font_size = 25
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
 [node name="Node3D" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -25,3 +39,100 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
 
 [node name="Cardboard Box" parent="." instance=ExtResource("2_a0tk4")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.5, 0)
+script = ExtResource("3_jka67")
+
+[node name="ShakeTimer" type="Timer" parent="Cardboard Box"]
+one_shot = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("cube")]
+script = ExtResource("3_r3fl7")
+cube = NodePath("../Cardboard Box")
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.1
+anchor_right = 0.95
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="MaxScoreLabel" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "10"
+label_settings = SubResource("LabelSettings_wc5p8")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("5_i5arm")
+expand_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Control/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+step = 1.0
+allow_greater = true
+fill_mode = 3
+show_percentage = false
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/Control/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_jsk3o")
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Control/MarginContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 20
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/MarginContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("3_a0tk4")
+expand_mode = 4
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Control/MarginContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("3_a0tk4")
+expand_mode = 4
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/Control/MarginContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("3_a0tk4")
+expand_mode = 4
+
+[node name="DamageCooldownTimer" type="Timer" parent="CanvasLayer"]
+one_shot = true
