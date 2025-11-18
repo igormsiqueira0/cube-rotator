@@ -9,6 +9,20 @@ var health = 3
 var can_take_damage: bool = true
 var player_data: PlayerData
 
+var indicator_directions = ["up", "down", "left", "right"]
+var indicator_types = ["arrow", "finger", "text"]
+var indicator_symbols = {
+	"up":    ["↑", "👆", "UP"],
+	"down":  ["↓", "👇", "DOWN"],
+	"left":  ["←", "👈", "LEFT"],
+	"right": ["→", "👉", "RIGHT"]
+}
+var indicators = []
+var majority_direction = ""
+
+@onready var indicator_container: HBoxContainer = $Control/MarginContainer/IndicatorsContainer
+# TODO: increase indicator bar size, ensure one direction is most frequent
+
 @onready var progress_bar: ProgressBar = $Control/MarginContainer/VBoxContainer/PanelContainer/ProgressBar
 @onready var score_label: Label = $Control/MarginContainer/VBoxContainer/PanelContainer/ScoreLabel
 @onready var max_score_label: Label = $Control/MarginContainer/VBoxContainer/HBoxContainer/MaxScoreLabel
@@ -19,12 +33,43 @@ func _ready() -> void:
 	if player_data: max_score = player_data.max_score
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	progress_bar.max_value = max_score
-	
+
 	var hearts_parent = $Control/MarginContainer/HBoxContainer2
 	for child in hearts_parent.get_children():
 		hearts_list.append(child)
-	
+
 	damage_cooldown_timer.timeout.connect(_on_damage_cooldown_timeout)
+
+	generate_and_render_indicators()
+func generate_and_render_indicators():
+	indicators.clear()
+	var direction_count = {"up": 0, "down": 0, "left": 0, "right": 0}
+	var total = randi_range(5, 11)
+	for i in total:
+		var dir = indicator_directions[randi() % indicator_directions.size()]
+		var type_idx = randi() % indicator_types.size()
+		var symbol = indicator_symbols[dir][type_idx]
+		indicators.append({"direction": dir, "type": indicator_types[type_idx], "symbol": symbol})
+		direction_count[dir] += 1
+	# Find majority direction
+	var max_count = -1
+	for d in direction_count.keys():
+		if direction_count[d] > max_count:
+			max_count = direction_count[d]
+			majority_direction = d
+	render_indicators()
+
+func render_indicators():
+	for child in indicator_container.get_children():
+		child.queue_free()
+	for ind in indicators:
+		var lbl = Label.new()
+		lbl.text = str(ind["symbol"])
+		lbl.add_theme_color_override("font_color", Color(1,1,1))
+		indicator_container.add_child(lbl)
+
+func next_round():
+	generate_and_render_indicators()
 
 func increment_score() -> void:
 	if health > 0:
@@ -63,6 +108,8 @@ func _input(event):
 		take_damage()
 	if Input.is_action_just_pressed("ui_restart"): # R
 		get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("ui_accept"): # ENTER for next round (example)
+		next_round()
 
 func _process(delta: float) -> void:
 	progress_bar.value = score
