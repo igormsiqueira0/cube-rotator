@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://ca0j16icoeefb"]
+[gd_scene load_steps=13 format=3 uid="uid://ca0j16icoeefb"]
 
 [ext_resource type="Texture2D" uid="uid://bv26siwsba1s4" path="res://horn-koppe_spring_4k.exr" id="1_noarx"]
 [ext_resource type="PackedScene" uid="uid://bl8msudax3t2o" path="res://source/Cardboard Box.fbx" id="2_a0tk4"]
+[ext_resource type="Script" uid="uid://dbras258hgri0" path="res://node_3d.gd" id="2_wc5p8"]
 [ext_resource type="Texture2D" uid="uid://b6q8a5tp4l535" path="res://source/heart_77931.png" id="3_a0tk4"]
 [ext_resource type="Script" uid="uid://7patgw0kabyp" path="res://source/cardboard_box.gd" id="3_jka67"]
 [ext_resource type="Script" uid="uid://q2tcnjk7tk05" path="res://canvas_layer.gd" id="3_r3fl7"]
@@ -37,16 +38,19 @@ environment = SubResource("Environment_i5arm")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
 
-[node name="Cardboard Box" parent="." instance=ExtResource("2_a0tk4")]
+[node name="Node3D" type="Node3D" parent="."]
+script = ExtResource("2_wc5p8")
+
+[node name="Cardboard Box" parent="Node3D" instance=ExtResource("2_a0tk4")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -0.5, 0)
 script = ExtResource("3_jka67")
 
-[node name="ShakeTimer" type="Timer" parent="Cardboard Box"]
+[node name="ShakeTimer" type="Timer" parent="Node3D/Cardboard Box"]
 one_shot = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("cube")]
 script = ExtResource("3_r3fl7")
-cube = NodePath("../Cardboard Box")
+cube = NodePath("../Node3D/Cardboard Box")
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
