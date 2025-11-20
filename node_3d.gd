@@ -3,7 +3,7 @@ extends Node3D
 var tween: Tween
 
 func _process(delta: float) -> void:
-	if tween and tween.is_running():
+	if tween and tween.is_running() or Global.health <= 0:
 		return
 	
 	if Input.is_action_just_pressed("ui_up"):

@@ -5,7 +5,6 @@ extends CanvasLayer
 var max_score = 0
 var score = 0
 var hearts_list : Array[TextureRect] = []
-var health = 3
 var can_take_damage: bool = true
 var player_data: PlayerData
 
@@ -31,7 +30,6 @@ var majority_direction = ""
 func _ready() -> void:
 	player_data = ResourceLoader.load("user://PlayerData.tres")
 	if player_data: max_score = player_data.max_score
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	progress_bar.max_value = max_score
 
 	var hearts_parent = $Control/MarginContainer/HBoxContainer2
@@ -73,7 +71,7 @@ func next_round():
 	generate_and_render_indicators()
 
 func evaluate(input_direction: String) -> void:
-	if health <= 0: return
+	if Global.health <= 0: return
 	if input_direction == majority_direction:
 		increment_score()
 	else:
@@ -81,24 +79,24 @@ func evaluate(input_direction: String) -> void:
 	next_round()
 
 func increment_score() -> void:
-	if health > 0:
+	if Global.health > 0:
 		score += 1
 		score_label.text = str(score)
 
 func take_damage() -> void:
-	if health > 0 and can_take_damage:
+	if Global.health > 0 and can_take_damage:
 		can_take_damage = false
 		damage_cooldown_timer.start(0.7)
 		
-		health -= 1
+		Global.health -= 1
 		cube.start_shake(0.7)
 		update_heart_display()
-	if health <= 0:
+	if Global.health <= 0:
 		lose()
 		
 func update_heart_display() -> void:
 	for i in range(hearts_list.size()):
-		hearts_list[i].visible = i < health
+		hearts_list[i].visible = i < Global.health
 
 func lose() -> void:
 	if score <= max_score: return
@@ -119,12 +117,9 @@ func _input(event):
 		evaluate("up")
 	if Input.is_action_just_pressed("ui_down"):
 		evaluate("down")
-	if Input.is_action_just_pressed("increment_score"): # btn esquerdo mouse
-		increment_score()
-	if Input.is_action_just_pressed("damage"): # btn direito do mouse
-		take_damage()
 	if Input.is_action_just_pressed("ui_restart"): # R
 		get_tree().reload_current_scene()
+		Global.health = 3
 	if Input.is_action_just_pressed("ui_accept"): # ENTER for next round (example)
 		next_round()
 

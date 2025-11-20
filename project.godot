@@ -15,6 +15,10 @@ run/main_scene="uid://ca0j16icoeefb"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Global="*res://Global.gd"
+
 [input]
 
 increment_score={
