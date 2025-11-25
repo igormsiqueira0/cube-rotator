@@ -18,6 +18,8 @@ var indicator_symbols = {
 }
 var indicators = []
 var majority_direction = ""
+var num_directions = indicator_directions.size()
+var num_types = indicator_types.size()
 
 @onready var indicator_container: HBoxContainer = $Control/MarginContainer/IndicatorsContainer
 # TODO: ensure one direction is most frequent
@@ -43,22 +45,42 @@ func _ready() -> void:
 	damage_cooldown_timer.timeout.connect(_on_damage_cooldown_timeout)
 
 	generate_and_render_indicators()
+
 func generate_and_render_indicators():
 	indicators.clear()
 	var direction_count = {"up": 0, "down": 0, "left": 0, "right": 0}
-	var total = randi_range(5, 11)
-	for i in total:
-		var dir = indicator_directions[randi() % indicator_directions.size()]
-		var type_idx = randi() % indicator_types.size()
+	
+	# number of indicators
+	var total = randi_range(3, 11)
+	# ensure majority direction
+	majority_direction = indicator_directions[randi() % num_directions]
+	var min_majority = int(total / 2) + 1
+	var majority_count = randi_range(min_majority, total)
+	direction_count[majority_direction] = majority_count
+	# add majority indicators first
+	for i in majority_count:
+		var type_idx = randi() % num_types
+		var symbol = indicator_symbols[majority_direction][type_idx]
+		indicators.append(
+			{"direction": majority_direction, "type": indicator_types[type_idx], "symbol": symbol}
+		)
+
+	# add remaining indicators
+	var remaining = total - majority_count
+	var other_directions = indicator_directions.duplicate()
+	other_directions.erase(majority_direction)
+	for i in remaining:
+		var dir = other_directions[randi() % (num_directions - 1)]
+		var type_idx = randi() % num_types
 		var symbol = indicator_symbols[dir][type_idx]
-		indicators.append({"direction": dir, "type": indicator_types[type_idx], "symbol": symbol})
+		indicators.append(
+			{"direction": dir, "type": indicator_types[type_idx], "symbol": symbol}
+		)
 		direction_count[dir] += 1
-	# Find majority direction
-	var max_count = -1
-	for d in direction_count.keys():
-		if direction_count[d] > max_count:
-			max_count = direction_count[d]
-			majority_direction = d
+
+	# shuffle indicators
+	indicators.shuffle()
+
 	render_indicators()
 
 func render_indicators():
