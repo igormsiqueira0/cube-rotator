@@ -27,6 +27,10 @@ var majority_direction = ""
 @onready var max_score_label: Label = $Control/MarginContainer/VBoxContainer/HBoxContainer/MaxScoreLabel
 @onready var damage_cooldown_timer: Timer = $DamageCooldownTimer
 
+@onready var boxWithoutClown = $"../Node3D/BoxWithoutClown"
+@onready var boxWithClown = $"../BoxWithClown"
+@onready var animation = $"../BoxWithClown/AnimationPlayer"
+
 func _ready() -> void:
 	player_data = ResourceLoader.load("user://PlayerData.tres")
 	if player_data: max_score = player_data.max_score
@@ -99,6 +103,9 @@ func update_heart_display() -> void:
 		hearts_list[i].visible = i < Global.health
 
 func lose() -> void:
+	boxWithClown.visible = true
+	boxWithoutClown.visible = false
+	animation.play("PopOut")
 	if score <= max_score: return
 	var save = PlayerData.new()
 	save.max_score = score
