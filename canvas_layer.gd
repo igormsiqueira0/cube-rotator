@@ -54,8 +54,9 @@ func generate_and_render_indicators():
 	var total = randi_range(3, 11)
 	# ensure majority direction
 	majority_direction = indicator_directions[randi() % num_directions]
-	var min_majority = int(total / 2) + 1
-	var majority_count = randi_range(min_majority, total)
+	# we can play with different majority rules.
+	# examples are: 50%+1 (chosen), random between min and total, majority as ceil, etc
+	var majority_count = ceil(total / 2) + 1
 	direction_count[majority_direction] = majority_count
 	# add majority indicators first
 	for i in majority_count:
