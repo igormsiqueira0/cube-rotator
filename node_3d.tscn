@@ -865,6 +865,13 @@ layout_mode = 2
 size_flags_vertical = 8
 alignment = 1
 
+[node name="Label" type="Label" parent="CanvasLayer/Control/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+text = "R: Reset
+←↑→↓ (arrow keys): Rotate"
+
 [node name="DamageCooldownTimer" type="Timer" parent="CanvasLayer"]
 one_shot = true
 
